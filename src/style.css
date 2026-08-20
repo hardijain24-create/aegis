@@ -267,6 +267,22 @@ main {
   z-index: 1;
 }
 
+.spotlight-peek {
+  opacity: 0.82;
+  transition: opacity 0.25s ease, filter 0.25s ease;
+}
+
+.spotlight-card-stage:hover + .spotlight-peek,
+.spotlight-card-stage:focus-visible {
+  outline: 2px solid rgba(17, 17, 15, 0.32);
+  outline-offset: 4px;
+}
+
+.spotlight-card-stage:hover ~ .spotlight-peek {
+  opacity: 1;
+  filter: brightness(1.12);
+}
+
 .page-view {
   display: none;
   opacity: 0;

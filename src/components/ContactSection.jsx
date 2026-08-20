@@ -41,7 +41,6 @@ export default function ContactSection() {
       className="w-full bg-[#F2F0EB] py-32 px-8 sm:px-12 md:px-16 flex flex-col justify-center border-b border-[rgba(17,17,15,0.08)]"
     >
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-        
         {/* Left Headline */}
         <div>
           <motion.span 
@@ -51,7 +50,7 @@ export default function ContactSection() {
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, ease: customEase }}
           >
-            05 / INQUIRIES
+            06 / INQUIRIES
           </motion.span>
           <motion.h2 
             className="text-[#11110F] font-semibold leading-[0.95] tracking-tight mb-8 font-heading"

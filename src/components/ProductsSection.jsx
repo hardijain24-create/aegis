@@ -1,223 +1,181 @@
-import React, { useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import gsap from 'gsap';
 
 export default function ProductsSection() {
-  const sectionRef = useRef(null);
+  const containerRef = useRef(null);
+  const incomingCardRef = useRef(null);
+  const incomingTextRefs = useRef([]);
+  const transitionRef = useRef(null);
+  const isTransitioningRef = useRef(false);
 
-  // Parallax coordination for card images
-  const [parallax1, setParallax1] = useState({ x: 0, y: 0 });
-  const [parallax2, setParallax2] = useState({ x: 0, y: 0 });
+  const [activeIdx, setActiveIdx] = useState(0);
 
-  // Scroll mapping for opposing horizontal shifts
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  const headingX = useTransform(scrollYProgress, [0, 1], [-20, 20]);
-
-  const customEase = [0.16, 1, 0.3, 1];
-
-  // Clip-path image entry reveals
-  const imageClipVariants = {
-    hidden: { 
-      clipPath: "inset(8% 8% 8% 8%)", 
-      opacity: 0, 
-      scale: 1.03 
+  const products = [
+    {
+      tag: '01 / EMERGENCY RESPONSE',
+      title: 'GUARDIAN',
+      desc: 'Real-time SOS alerts, live location tracking, and automated emergency dispatch — built for the seconds that decide everything.',
+      cta: 'Explore GUARDIAN',
+      img: '/guardian.jpg',
+      id: 'guardian',
+      gradient: 'linear-gradient(90deg, #6F716D 0%, #B8BAB4 100%)'
     },
-    visible: { 
-      clipPath: "inset(0% 0% 0% 0%)", 
-      opacity: 1, 
-      scale: 1,
-      transition: { duration: 1.2, ease: customEase }
+    {
+      tag: '02 / HOSPITAL MANAGEMENT',
+      title: 'COREPULSE',
+      desc: 'One system for bed availability, patient records, staff scheduling, and department coordination — built to keep a hospital moving.',
+      cta: 'Explore COREPULSE',
+      img: '/corepulse.jpg',
+      id: 'corepulse',
+      gradient: 'linear-gradient(90deg, #A9C4C0 0%, #F0E8D8 100%)'
     }
-  };
+  ];
 
-  const cardContainerVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.8, ease: customEase }
-    }
-  };
+  const triggerFlip = (nextIdx) => {
+    if (isTransitioningRef.current || !incomingCardRef.current) return;
 
-  const textVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.8, ease: customEase, delay: 0.2 }
-    }
-  };
+    isTransitioningRef.current = true;
 
-  // Stagger variants for the left-to-right "walking" text
-  const walkContainerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1
+    const nextProduct = products[nextIdx];
+    const textRefs = incomingTextRefs.current.filter(Boolean);
+
+    transitionRef.current = gsap.timeline({
+      onComplete: () => {
+        setActiveIdx(nextIdx);
+        isTransitioningRef.current = false;
       }
+    });
+
+    transitionRef.current
+      .to(incomingCardRef.current, {
+        height: '100%',
+        duration: 1,
+        ease: 'power2.inOut'
+      })
+      .to(textRefs, {
+        opacity: 1,
+        y: 0,
+        duration: 0.3,
+        stagger: 0.06,
+        ease: 'power2.out'
+      }, 0.7);
+  };
+
+  useEffect(() => {
+    gsap.set(incomingCardRef.current, { height: '10px' });
+    gsap.set(incomingTextRefs.current.filter(Boolean), { opacity: 0, y: 12 });
+  }, [activeIdx]);
+
+  const handleCardKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      triggerFlip(activeIdx === 0 ? 1 : 0);
     }
   };
 
-  const walkWordVariants = {
-    hidden: { 
-      opacity: 0, 
-      x: -20 
-    },
-    visible: { 
-      opacity: 1, 
-      x: 0,
-      transition: { duration: 0.6, ease: customEase }
-    }
-  };
-
-  const handleMouseMove = (e, setCoords) => {
-    if (window.innerWidth < 1024) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const xVal = (e.clientX - rect.left) / rect.width - 0.5; // [-0.5, 0.5]
-    const yVal = (e.clientY - rect.top) / rect.height - 0.5; // [-0.5, 0.5]
-    setCoords({ x: xVal * 12, y: yVal * 8 }); // Max 5-8px movement
-  };
-
-  const handleMouseLeave = (setCoords) => {
-    setCoords({ x: 0, y: 0 });
-  };
-
-  const walkingWords = ["WHEN", "THE", "MOMENT", "CHANGES,", "AEGIS", "RESPONDS."];
+  const activeProduct = products[activeIdx];
+  const nextProduct = products[activeIdx === 0 ? 1 : 0];
 
   return (
     <section 
-      ref={sectionRef}
-      id="products" 
-      className="w-full bg-[#F2F0EB] py-24 px-8 sm:px-12 md:px-16 border-b border-[rgba(17,17,15,0.08)]"
+      ref={containerRef}
+      id="products"
+      className="w-full bg-[#F2F0EB] py-0 px-8 sm:px-12 md:px-16 border-b border-[rgba(17,17,15,0.08)] relative flex flex-col items-center overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto">
-        <motion.span 
-          className="text-[12px] font-mono tracking-widest text-[#686660] uppercase mb-12 block"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, ease: customEase }}
+      <div className="max-w-7xl mx-auto w-full flex flex-col items-center">
+        
+        {/* Section Header - More compact */}
+        <div className="w-full flex flex-col items-center select-none text-center mb-16 pt-16 md:pt-20">
+          <span className="text-[12px] font-mono tracking-widest text-[#686660] uppercase mb-3 block">
+            02 / PRODUCTS
+          </span>
+          <h2 className="text-[#11110f] font-semibold tracking-tight font-heading mb-2" style={{ fontSize: 'clamp(28px, 4.5vw, 56px)' }}>
+            PRODUCT SPOTLIGHT
+          </h2>
+          <p className="text-[#686660] text-sm tracking-wide font-mono uppercase">
+            Technology for the moments that matter.
+          </p>
+        </div>
+
+        {/* Spotlight Presentation Area - Optimized for viewport */}
+        <div 
+          className="relative w-full"
+          style={{ minHeight: '100vh', paddingTop: '0px' }}
         >
-          02 / PRODUCTS
-        </motion.span>
-
-        {/* Headline with opposing scroll movement and staggered walking text */}
-        <div style={{ overflow: 'hidden' }} className="mb-20">
-          <motion.div 
-            className="max-w-4xl select-none flex flex-wrap gap-x-4 gap-y-1 font-heading text-[#11110f] font-semibold leading-[0.95]"
-            style={{ x: headingX, fontSize: 'clamp(32px, 5.5vw, 68px)' }}
-            variants={walkContainerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
+          {/* The stage clips the incoming card as it grows downward. */}
+          <div
+            onClick={() => triggerFlip(activeIdx === 0 ? 1 : 0)}
+            onKeyDown={handleCardKeyDown}
+            role="button"
+            tabIndex={0}
+            aria-label={`Reveal ${nextProduct.title}`}
+            className="products-first-card spotlight-card-stage relative z-10 w-full overflow-hidden rounded-[8px] border border-[rgba(17,17,15,0.08)] bg-[#E8E6E0] shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
+            style={{
+              minHeight: '100vh',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}
           >
-            {walkingWords.map((word, idx) => (
-              <motion.span 
-                key={idx} 
-                variants={walkWordVariants}
-                className="inline-block"
+            <div 
+                className="absolute inset-0 flex min-h-full flex-col justify-between"
+            >
+                <div className="h-[45vh] min-h-[280px] w-full overflow-hidden bg-neutral-100">
+                  <img className="h-full w-full object-cover" src={activeProduct.img} alt={activeProduct.title} />
+              </div>
+
+                <div className="flex flex-1 flex-col justify-between p-8 md:p-12 lg:p-16">
+                <div>
+                    <span className="label mb-4 block font-mono text-[10px] uppercase tracking-widest text-[#686660]">
+                    {activeProduct.tag}
+                  </span>
+                    <h3 className="title mb-4 font-heading text-4xl font-semibold uppercase tracking-wide text-[#11110F] md:text-6xl">
+                    {activeProduct.title}
+                  </h3>
+                    <p className="description max-w-2xl font-body text-sm leading-relaxed text-[#686660] md:text-base">
+                    {activeProduct.desc}
+                  </p>
+                </div>
+                
+                  <div className="cta mt-10 flex items-center gap-2 text-xs font-medium tracking-wide text-[#11110F]">
+                  <span>{activeProduct.cta}</span>
+                  <span>→</span>
+                </div>
+              </div>
+            </div>
+
+              {/* Incoming card: a full card clipped to a thin top strip before transition. */}
+            <div
+                ref={incomingCardRef}
+                className="absolute left-0 top-0 z-10 flex w-full flex-col overflow-hidden rounded-[8px] border border-[rgba(17,17,15,0.08)] shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
+                style={{ height: '10px', background: '#E8E6E0', willChange: 'height' }}
               >
-                {word}
-              </motion.span>
-            ))}
-          </motion.div>
-        </div>
+                <div className="h-[45vh] min-h-[280px] w-full shrink-0 overflow-hidden bg-neutral-100">
+                  <img className="h-full w-full object-cover" src={nextProduct.img} alt={nextProduct.title} />
+                </div>
+                <div className="flex flex-1 flex-col justify-between p-8 md:p-12 lg:p-16">
+                  <div>
+                  <span ref={el => incomingTextRefs.current[0] = el} className="mb-4 block translate-y-3 font-mono text-[10px] uppercase tracking-widest text-[#686660] opacity-0">{nextProduct.tag}</span>
+                  <h3 ref={el => incomingTextRefs.current[1] = el} className="mb-4 translate-y-3 font-heading text-4xl font-semibold uppercase tracking-wide text-[#11110F] opacity-0 md:text-6xl">{nextProduct.title}</h3>
+                  <p ref={el => incomingTextRefs.current[2] = el} className="max-w-2xl translate-y-3 font-body text-sm leading-relaxed text-[#686660] opacity-0 md:text-base">{nextProduct.desc}</p>
+                  </div>
+                <div ref={el => incomingTextRefs.current[3] = el} className="mt-10 flex translate-y-3 items-center gap-2 text-xs font-medium tracking-wide text-[#11110F] opacity-0">
+                  <span>{nextProduct.cta}</span>
+                    <span>→</span>
+                  </div>
+                </div>
+              </div>
 
-        {/* Product list - 2 Columns (Safety & Healthcare) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16">
-          
-          {/* Card 1: Safety (Guardian) */}
-          <motion.div 
-            className="flex flex-col bg-[#E8E6E0] border border-[rgba(17,17,15,0.06)] rounded-[8px] overflow-hidden cursor-pointer"
-            initial="hidden"
-            whileInView="visible"
-            whileHover={{ y: -5 }}
-            viewport={{ once: true, margin: "-100px" }}
-            variants={cardContainerVariants}
-            onMouseMove={(e) => handleMouseMove(e, setParallax1)}
-            onMouseLeave={() => handleMouseLeave(setParallax1)}
-          >
-            <motion.div 
-              className="w-full aspect-[3/2] overflow-hidden bg-neutral-100"
-              variants={imageClipVariants}
-            >
-              <motion.img 
-                animate={{ x: parallax1.x, y: parallax1.y, scale: 1.01 }}
-                whileHover={{ scale: 1.035 }}
-                transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                className="w-full h-full object-cover origin-center"
-                src="/guardian.jpg" 
-                alt="Aegis Guardian wearable safety sensor device" 
-              />
-            </motion.div>
-            
-            <motion.div className="p-8 sm:p-10 flex flex-col justify-between flex-1" variants={textVariants}>
-              <div>
-                <span className="text-[11px] font-mono tracking-wider text-[#686660] uppercase mb-3 block">
-                  PERSONAL SAFETY
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-semibold text-[#11110F] mb-4 font-heading">
-                  Guardian
-                </h3>
-                <p className="text-[#686660] leading-relaxed max-w-md font-body text-base">
-                  A safety-focused product designed around moments where response time matters. Built to disappear into your routine while keeping you connected.
-                </p>
-              </div>
-              <div className="mt-8 flex items-center gap-2 text-[#11110F] text-[15px] font-medium tracking-wide">
-                <span>Discover Guardian</span>
-                <span>→</span>
-              </div>
-            </motion.div>
-          </motion.div>
+          </div>
 
-          {/* Card 2: Healthcare (CorePulse) */}
-          <motion.div 
-            className="flex flex-col bg-[#E8E6E0] border border-[rgba(17,17,15,0.06)] rounded-[8px] overflow-hidden cursor-pointer"
-            initial="hidden"
-            whileInView="visible"
-            whileHover={{ y: -5 }}
-            viewport={{ once: true, margin: "-100px" }}
-            variants={cardContainerVariants}
-            onMouseMove={(e) => handleMouseMove(e, setParallax2)}
-            onMouseLeave={() => handleMouseLeave(setParallax2)}
-          >
-            <motion.div 
-              className="w-full aspect-[3/2] overflow-hidden bg-neutral-100"
-              variants={imageClipVariants}
-            >
-              <motion.img 
-                animate={{ x: parallax2.x, y: parallax2.y, scale: 1.01 }}
-                whileHover={{ scale: 1.035 }}
-                transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                className="w-full h-full object-cover origin-center"
-                src="/corepulse.jpg" 
-                alt="Healthcare coordinating workflow layers" 
-              />
-            </motion.div>
-            
-            <motion.div className="p-8 sm:p-10 flex flex-col justify-between flex-1" variants={textVariants}>
-              <div>
-                <span className="text-[11px] font-mono tracking-wider text-[#686660] uppercase mb-3 block">
-                  HEALTHCARE
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-semibold text-[#11110F] mb-4 font-heading">
-                  CorePulse
-                </h3>
-                <p className="text-[#686660] leading-relaxed max-w-md font-body text-base">
-                  Technology for better healthcare management and coordination. Unifying clinics, systems, and patient workflows into one synchronized network.
-                </p>
-              </div>
-              <div className="mt-8 flex items-center gap-2 text-[#11110F] text-[15px] font-medium tracking-wide">
-                <span>Explore CorePulse</span>
-                <span>→</span>
-              </div>
-            </motion.div>
-          </motion.div>
+          <div
+            className="spotlight-peek absolute left-0 top-0 z-20 h-[10px] w-full"
+            style={{ background: nextProduct.gradient }}
+          />
 
         </div>
+
       </div>
     </section>
   );

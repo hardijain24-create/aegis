@@ -3,7 +3,7 @@
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  background-color: #ffffff;
+  background-color: #F2F0EB;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -20,7 +20,8 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  background-color: #ffffff;
+  background: transparent;
+  filter: none;
   transition: all 0.5s ease;
 }
 
@@ -49,6 +50,56 @@
   height: 100%;
   object-fit: cover;
   object-position: center center;
+}
+
+.hyperspace-burst {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+  pointer-events: none;
+  background: transparent;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.burst-glow,
+.burst-layer,
+.burst-streaks,
+.burst-chromatic {
+  position: absolute;
+  inset: -35%;
+  transform-origin: center;
+  will-change: transform, opacity, filter;
+}
+
+.burst-glow {
+  inset: -10%;
+  opacity: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, rgba(235, 230, 218, 0.4) 12%, transparent 52%);
+  mix-blend-mode: screen;
+}
+
+.burst-layer {
+  opacity: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(205, 198, 184, 0.5) 8%, rgba(62, 69, 72, 0.2) 28%, transparent 62%);
+  mix-blend-mode: screen;
+}
+
+.burst-streaks {
+  opacity: 0;
+  background: repeating-conic-gradient(from 0deg, transparent 0deg 1.7deg, rgba(255, 255, 255, 0.82) 2deg 2.25deg, transparent 2.7deg 7deg);
+  mask-image: radial-gradient(circle, transparent 0 11%, #000 25%, #000 62%, transparent 78%);
+  -webkit-mask-image: radial-gradient(circle, transparent 0 11%, #000 25%, #000 62%, transparent 78%);
+  mix-blend-mode: screen;
+}
+
+.burst-chromatic {
+  opacity: 0;
+  background: repeating-conic-gradient(from 1deg, transparent 0deg 2deg, rgba(199, 219, 220, 0.45) 2.2deg 2.5deg, transparent 2.8deg 7deg);
+  mask-image: radial-gradient(circle, transparent 0 16%, #000 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(circle, transparent 0 16%, #000 30%, transparent 70%);
+  mix-blend-mode: screen;
 }
 
 /* Fixed Navigation bar */
@@ -197,12 +248,18 @@
   cursor: pointer;
 }
 
+/* Hero Content Spacer - Flexes to fill viewport */
+.hero-content-spacer {
+  flex: 1;
+  pointer-events: none;
+}
+
 /* Footer Section with Upward Gradient */
 .hero-footer-wrapper {
   position: relative;
   z-index: 30;
-  background: linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0.85) 50%, transparent 100%);
-  padding: 40px 16px 24px 16px;
+  background: transparent;
+  padding: 48px 16px 28px 16px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -212,10 +269,10 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 80px 32px 32px 32px;
+    padding: 64px 32px 40px 32px;
   }
   .footer-left-block {
-    max-width: 80%;
+    max-width: 75%;
   }
 }
 
@@ -243,16 +300,16 @@
 
 .footer-heading {
   font-weight: 300;
-  font-size: clamp(2rem, 8vw, 4.5rem);
+  font-size: clamp(2.25rem, 7.5vw, 5rem);
   letter-spacing: -0.03em;
-  line-height: 1;
+  line-height: 1.1;
   color: #111111;
   margin: 0;
 }
 
 @media (min-width: 768px) {
   .footer-heading {
-    font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+    font-size: clamp(2.8rem, 6vw, 5rem);
   }
 }
 
