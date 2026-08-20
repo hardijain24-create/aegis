@@ -1,0 +1,310 @@
+/* AEGIS Hero Plain CSS Layout */
+.aegis-hero {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-family: 'Inter', sans-serif;
+  color: #111111;
+}
+
+/* Background Video container */
+.hero-video-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background-color: #ffffff;
+  transition: all 0.5s ease;
+}
+
+/* Mobile video proportions (80% width and height centered) */
+@media (max-width: 767px) {
+  .hero-video-wrapper {
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+  }
+}
+
+/* Desktop video proportions (100% width and height) */
+@media (min-width: 768px) {
+  .hero-video-wrapper {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+  }
+}
+
+.hero-video-wrapper video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* Fixed Navigation bar */
+.hero-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .hero-nav {
+    padding: 24px 32px;
+  }
+}
+
+.hero-nav-left, .hero-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+/* Logo icon styling */
+.nav-logo-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #111111;
+}
+
+.nav-logo-icon {
+  width: 22px;
+  height: 22px;
+  transform: rotate(-35deg);
+}
+
+.nav-logo-text {
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 767px) {
+  .nav-logo-text {
+    display: none;
+  }
+}
+
+/* Pill buttons inside navbar */
+.nav-menu-btn {
+  background-color: #111111;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.circle-plus-wrapper {
+  background-color: #ffffff;
+  color: #111111;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-menu-text {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Tags pill */
+.nav-tags-pill {
+  background-color: #F4F4F6;
+  border-radius: 999px;
+  padding: 6px 14px;
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #6D6B67;
+}
+
+@media (max-width: 767px) {
+  .nav-tags-pill {
+    display: none;
+  }
+}
+
+.nav-tag-item {
+  position: relative;
+}
+
+.nav-tag-item:not(:last-child)::after {
+  content: "•";
+  margin-left: 12px;
+  opacity: 0.5;
+}
+
+/* Right navigation side */
+.nav-right-pill {
+  background-color: #F4F4F6;
+  border-radius: 999px;
+  padding: 6px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #111111;
+}
+
+@media (max-width: 767px) {
+  .hero-nav-right {
+    display: none;
+  }
+}
+
+.circle-dots-btn {
+  background-color: #111111;
+  color: #ffffff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+/* Footer Section with Upward Gradient */
+.hero-footer-wrapper {
+  position: relative;
+  z-index: 30;
+  background: linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0.85) 50%, transparent 100%);
+  padding: 40px 16px 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+@media (min-width: 768px) {
+  .hero-footer-wrapper {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 80px 32px 32px 32px;
+  }
+  .footer-left-block {
+    max-width: 80%;
+  }
+}
+
+/* Footer Left elements */
+.footer-left-block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer-subtitle-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(17, 17, 17, 0.55);
+}
+
+.subtitle-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #111111;
+  border-radius: 50%;
+}
+
+.footer-heading {
+  font-weight: 300;
+  font-size: clamp(2rem, 8vw, 4.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #111111;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .footer-heading {
+    font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  }
+}
+
+.footer-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.footer-btn-pill {
+  background-color: #111111;
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-btn-outline {
+  background-color: transparent;
+  color: #111111;
+  border: 1.5px solid rgba(0, 0, 0, 0.35);
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Footer Right tags */
+.footer-right-block {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.footer-tag-pill {
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #111111;
+}
