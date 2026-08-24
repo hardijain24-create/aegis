@@ -12,7 +12,7 @@ const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'dummy';
 function RootComponent() {
   useEffect(() => {
     // Fire a visit tracking request on load
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const apiUrl = 'https://aegisb.onrender.com';
     fetch(`${apiUrl}/api/visits`, { method: 'POST' }).catch(() => {});
   }, []);
 

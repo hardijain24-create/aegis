@@ -7,7 +7,7 @@ export default function Join() {
   const [error, setError] = useState('');
   const [msg, setMsg] = useState('');
 
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  const apiUrl = 'https://aegisb.onrender.com';
 
   const handleLocalSubmit = async (e) => {
     e.preventDefault();

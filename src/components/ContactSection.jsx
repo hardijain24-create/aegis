@@ -5,9 +5,16 @@ export default function ContactSection() {
   const submitRef = useRef(null);
   const customEase = [0.16, 1, 0.3, 1];
 
-  // Magnetic button state values
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [arrowX, setArrowX] = useState(0);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    field: '',
+    message: ''
+  });
+  const [status, setStatus] = useState('');
 
   const handleMouseMove = (e) => {
     if (window.innerWidth < 1024) return;
@@ -35,13 +42,34 @@ export default function ContactSection() {
     setArrowX(0);
   };
 
+  const handleChange = (e) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('Sending...');
+    const apiUrl = 'https://aegisb.onrender.com';
+    try {
+      const res = await fetch(`${apiUrl}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      if (!res.ok) throw new Error('Failed to send message');
+      setStatus('Message sent successfully!');
+      setFormData({ name: '', email: '', field: '', message: '' });
+    } catch (err) {
+      setStatus('Failed to send. Please try again.');
+    }
+  };
+
   return (
     <section 
       id="contact" 
       className="w-full bg-[#F2F0EB] py-32 px-8 sm:px-12 md:px-16 flex flex-col justify-center border-b border-[rgba(17,17,15,0.08)]"
     >
       <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-        {/* Left Headline */}
         <div>
           <motion.span 
             className="text-[12px] font-mono tracking-widest text-[#686660] uppercase mb-12 block"
@@ -74,20 +102,23 @@ export default function ContactSection() {
           </motion.p>
         </div>
 
-        {/* Right Form */}
         <motion.form 
           className="flex flex-col gap-8 w-full max-w-xl"
-          onSubmit={(e) => { e.preventDefault(); alert("Inquiry received. Thank you."); }}
+          onSubmit={handleSubmit}
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: customEase, delay: 0.2 }}
         >
+          {status && <p className="text-sm font-mono text-[#686660]">{status}</p>}
           <div className="flex flex-col border-b border-[rgba(17,17,15,0.15)] pb-3">
             <label className="text-[10px] font-mono tracking-wider text-[#686660] uppercase mb-2">Name</label>
             <input 
               type="text" 
+              name="name"
               required
+              value={formData.name}
+              onChange={handleChange}
               className="bg-transparent border-none outline-none text-[#11110F] font-body text-lg placeholder-neutral-400"
               placeholder="Your full name"
             />
@@ -97,7 +128,10 @@ export default function ContactSection() {
             <label className="text-[10px] font-mono tracking-wider text-[#686660] uppercase mb-2">Email</label>
             <input 
               type="email" 
+              name="email"
               required
+              value={formData.email}
+              onChange={handleChange}
               className="bg-transparent border-none outline-none text-[#11110F] font-body text-lg placeholder-neutral-400"
               placeholder="you@domain.com"
             />
@@ -107,6 +141,9 @@ export default function ContactSection() {
             <label className="text-[10px] font-mono tracking-wider text-[#686660] uppercase mb-2">Inquiry Field</label>
             <input 
               type="text" 
+              name="field"
+              value={formData.field}
+              onChange={handleChange}
               className="bg-transparent border-none outline-none text-[#11110F] font-body text-lg placeholder-neutral-400"
               placeholder="Personal Safety / Healthcare Operations / Hardware Engineering"
             />
@@ -116,7 +153,10 @@ export default function ContactSection() {
             <label className="text-[10px] font-mono tracking-wider text-[#686660] uppercase mb-2">Message</label>
             <input 
               type="text" 
+              name="message"
               required
+              value={formData.message}
+              onChange={handleChange}
               className="bg-transparent border-none outline-none text-[#11110F] font-body text-lg placeholder-neutral-400"
               placeholder="How can we collaborate?"
             />

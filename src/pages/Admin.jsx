@@ -7,7 +7,7 @@ export default function Admin() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  const apiUrl = 'https://aegisb.onrender.com';
 
   const handleLogin = async (e) => {
     e.preventDefault();
