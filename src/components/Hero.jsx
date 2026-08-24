@@ -269,8 +269,27 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Right Elements (Sound Controller Toggle) */}
-        <div className="hero-nav-right" style={{ display: 'flex' }}>
+        {/* Right Elements (Sound Controller Toggle & Join) */}
+        <div className="hero-nav-right" style={{ display: 'flex', gap: '12px' }}>
+          <a
+            href="/join"
+            className="footer-btn-outline"
+            style={{
+              padding: '6px 14px',
+              fontSize: '11px',
+              fontWeight: 500,
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              borderRadius: '999px',
+              backgroundColor: 'transparent',
+              color: '#111111',
+              border: '1px solid rgba(17, 17, 17, 0.25)',
+              cursor: 'pointer',
+              textDecoration: 'none'
+            }}
+          >
+            Join
+          </a>
           <button 
             onClick={handleToggleSound}
             className="footer-btn-outline"
