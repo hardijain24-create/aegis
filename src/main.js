@@ -2,8 +2,8 @@ import { initHeroCanvas } from './hero-canvas.js';
 import { initGuardianVisual, initCorePulseVisual, initTechVisual } from './products.js';
 document.addEventListener('DOMContentLoaded', () => {
   const PRODUCT_LINKS = {
-    guardian: "https://aegis.tech/products/guardian",
-    corepulse: "https://aegis.tech/products/corepulse"
+    guardian: "https://gw-fesq.onrender.com/",
+    corepulse: "https://corepulse-patientportal.onrender.com/"
   };
 
   const guardianCta = document.getElementById('ctaGuardian');

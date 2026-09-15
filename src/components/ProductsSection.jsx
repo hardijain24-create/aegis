@@ -16,6 +16,7 @@ export default function ProductsSection() {
       title: 'GUARDIAN',
       desc: 'Real-time SOS alerts, live location tracking, and automated emergency dispatch — built for the seconds that decide everything.',
       cta: 'Explore GUARDIAN',
+      link: 'https://gw-fesq.onrender.com/',
       img: '/guardian.jpg',
       id: 'guardian',
       gradient: 'linear-gradient(90deg, #6F716D 0%, #B8BAB4 100%)'
@@ -25,6 +26,7 @@ export default function ProductsSection() {
       title: 'COREPULSE',
       desc: 'One system for bed availability, patient records, staff scheduling, and department coordination — built to keep a hospital moving.',
       cta: 'Explore COREPULSE',
+      link: 'https://corepulse-patientportal.onrender.com/',
       img: '/corepulse.jpg',
       id: 'corepulse',
       gradient: 'linear-gradient(90deg, #A9C4C0 0%, #F0E8D8 100%)'
@@ -138,10 +140,18 @@ export default function ProductsSection() {
                   </p>
                 </div>
                 
-                  <div className="cta mt-10 flex items-center gap-2 text-xs font-medium tracking-wide text-[#11110F]">
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (activeProduct.link && activeProduct.link !== '#') {
+                        window.open(activeProduct.link, '_blank');
+                      }
+                    }}
+                    className="cta mt-10 flex items-center gap-2 text-xs font-medium tracking-wide text-[#11110F] cursor-pointer hover:underline"
+                  >
                   <span>{activeProduct.cta}</span>
                   <span>→</span>
-                </div>
+                </button>
               </div>
             </div>
 
@@ -160,10 +170,13 @@ export default function ProductsSection() {
                   <h3 ref={el => incomingTextRefs.current[1] = el} className="mb-4 translate-y-3 font-heading text-4xl font-semibold uppercase tracking-wide text-[#11110F] opacity-0 md:text-6xl">{nextProduct.title}</h3>
                   <p ref={el => incomingTextRefs.current[2] = el} className="max-w-2xl translate-y-3 font-body text-sm leading-relaxed text-[#686660] opacity-0 md:text-base">{nextProduct.desc}</p>
                   </div>
-                <div ref={el => incomingTextRefs.current[3] = el} className="mt-10 flex translate-y-3 items-center gap-2 text-xs font-medium tracking-wide text-[#11110F] opacity-0">
+                <button 
+                  ref={el => incomingTextRefs.current[3] = el} 
+                  className="mt-10 flex translate-y-3 items-center gap-2 text-xs font-medium tracking-wide text-[#11110F] opacity-0"
+                >
                   <span>{nextProduct.cta}</span>
-                    <span>→</span>
-                  </div>
+                  <span>→</span>
+                </button>
                 </div>
               </div>
 
